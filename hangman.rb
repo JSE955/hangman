@@ -22,7 +22,7 @@ class Hangman
   end
 
   def take_turn
-    puts 'Guess a letter'
+    puts 'Guess a letter:'
     letter = gets.chomp
     if secret_word.include?(letter)
       index_list = (0...secret_word.length).select { |i| secret_word[i] == letter }
@@ -31,6 +31,21 @@ class Hangman
       self.number_of_guesses = number_of_guesses - 1
       incorrect_letters.push(letter)
     end
+  end
+
+  def play
+    puts 'Welcome to Hangman!'
+    puts '--------------'
+    show_display
+    until number_of_guesses.zero?
+      take_turn
+      if display.none?('_')
+        puts "YOU WIN! Secret Word is #{secret_word}"
+        return
+      end
+      show_display
+    end
+    puts "YOU LOSE! Secret Word was #{secret_word}"
   end
 
   private
@@ -44,6 +59,4 @@ class Hangman
 end
 
 game = Hangman.new
-game.take_turn
-
-game.show_display
+game.play

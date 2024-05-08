@@ -1,5 +1,3 @@
-
-
 class Hangman
   attr_accessor :secret_word, :number_of_guesses, :display, :incorrect_letters
 
@@ -12,19 +10,23 @@ class Hangman
 
   def show_display
     puts "Secret Code: #{display.join(' ')}"
-    print "Incorrect Guesses: "
+    print 'Incorrect Guesses: '
     if incorrect_letters.empty?
       puts 'None'
     else
       puts incorrect_letters.join(' ')
     end
     puts "Guesses Remaining: #{number_of_guesses}"
+    puts
   end
 
   def take_turn
     puts 'Guess a letter:'
-    letter = gets.chomp
-    if secret_word.include?(letter)
+    letter = gets.chomp.downcase
+    if incorrect_letters.include?(letter) || display.include?(letter)
+      puts "#{letter} was already guessed."
+      take_turn
+    elsif secret_word.include?(letter)
       index_list = (0...secret_word.length).select { |i| secret_word[i] == letter }
       index_list.each { |i| display[i] = letter }
     else

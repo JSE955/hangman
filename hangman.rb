@@ -3,14 +3,10 @@ require 'json'
 class Hangman
   attr_accessor :secret_word, :number_of_guesses, :display, :incorrect_letters
 
-  def initialize
-    @secret_word = generate_secret_word
-    @number_of_guesses = 10
-    @display = Array.new(@secret_word.size, '_')
-    @incorrect_letters = []
-  end
-
-  def initialize(secret_word, number_of_guesses, display, incorrect_letters)
+  def initialize(secret_word = generate_secret_word,
+                 number_of_guesses = 10,
+                 display = Array.new(secret_word.size, '_'),
+                 incorrect_letters = [])
     @secret_word = secret_word
     @number_of_guesses = number_of_guesses
     @display = display
@@ -29,6 +25,12 @@ class Hangman
   def self.from_json(string)
     data = JSON.load string
     self.new(data['secret_word'], data['number_of_guesses'], data['display'], data['incorrect_letters'])
+  end
+
+  def save_game
+    File.open('save_data.json', 'w') do |file|
+      file.write self.to_json
+    end
   end
 
   def show_display
@@ -61,6 +63,7 @@ class Hangman
   def play
     puts 'Welcome to Hangman!'
     puts '--------------'
+    save_game
     show_display
     until number_of_guesses.zero?
       take_turn

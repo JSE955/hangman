@@ -1,3 +1,5 @@
+require 'json'
+
 class Hangman
   attr_accessor :secret_word, :number_of_guesses, :display, :incorrect_letters
 
@@ -6,6 +8,27 @@ class Hangman
     @number_of_guesses = 10
     @display = Array.new(@secret_word.size, '_')
     @incorrect_letters = []
+  end
+
+  def initialize(secret_word, number_of_guesses, display, incorrect_letters)
+    @secret_word = secret_word
+    @number_of_guesses = number_of_guesses
+    @display = display
+    @incorrect_letters = incorrect_letters
+  end
+
+  def to_json(*_args)
+    JSON.dump({
+      secret_word: secret_word,
+      number_of_guesses: number_of_guesses,
+      display: display,
+      incorrect_letter: incorrect_letters
+    })
+  end
+
+  def self.from_json(string)
+    data = JSON.load string
+    self.new(data['secret_word'], data['number_of_guesses'], data['display'], data['incorrect_letters'])
   end
 
   def show_display
@@ -21,7 +44,7 @@ class Hangman
   end
 
   def take_turn
-    puts 'Guess a letter:'
+    puts 'Guess a letter (or enter SAVE to save progress):'
     letter = gets.chomp.downcase
     if incorrect_letters.include?(letter) || display.include?(letter)
       puts "#{letter} was already guessed."

@@ -11,13 +11,25 @@ class Hangman
   end
 
   def show_display
-    puts 'Secret Code:'
-    puts display.join(' ')
-    puts 'Incorrect Guesses:'
+    puts "Secret Code: #{display.join(' ')}"
+    print "Incorrect Guesses: "
     if incorrect_letters.empty?
       puts 'None'
     else
       puts incorrect_letters.join(' ')
+    end
+    puts "Guesses Remaining: #{number_of_guesses}"
+  end
+
+  def take_turn
+    puts 'Guess a letter'
+    letter = gets.chomp
+    if secret_word.include?(letter)
+      index_list = (0...secret_word.length).select { |i| secret_word[i] == letter }
+      index_list.each { |i| display[i] = letter }
+    else
+      self.number_of_guesses = number_of_guesses - 1
+      incorrect_letters.push(letter)
     end
   end
 
@@ -32,15 +44,6 @@ class Hangman
 end
 
 game = Hangman.new
-puts "Guess a letter"
-guess = gets.chomp
-
-if game.secret_word.include?(guess)
-  index_list = (0...game.secret_word.length).select { |i| game.secret_word[i] == guess }
-  index_list.each { |i| game.display[i] = guess }
-else
-  game.number_of_guesses -= 1
-  game.incorrect_letters.push(guess)
-end
+game.take_turn
 
 game.show_display

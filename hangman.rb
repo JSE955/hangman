@@ -18,7 +18,7 @@ class Hangman
       secret_word: secret_word,
       number_of_guesses: number_of_guesses,
       display: display,
-      incorrect_letter: incorrect_letters
+      incorrect_letters: incorrect_letters
     })
   end
 
@@ -65,8 +65,6 @@ class Hangman
   end
 
   def play
-    puts 'Welcome to Hangman!'
-    puts '--------------'
     show_display
     until number_of_guesses.zero?
       take_turn
@@ -89,5 +87,21 @@ class Hangman
   end
 end
 
-game = Hangman.new
-game.play
+puts 'Welcome to Hangman!'
+option = 0 
+until option == 1 || option == 2
+  puts 'Select 1 to Start New Game'
+  puts 'Select 2 to Load Saved Data'
+  option = gets.chomp.to_i
+  if option == 1
+    game = Hangman.new
+    game.play
+  elsif option == 2
+    puts 'Loading...'
+    file = File.open('save_data.json')
+    game = Hangman.from_json(file)
+    game.play
+  else
+    puts 'Incorrect input'
+  end
+end

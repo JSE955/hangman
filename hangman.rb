@@ -31,6 +31,7 @@ class Hangman
     File.open('save_data.json', 'w') do |file|
       file.write self.to_json
     end
+    puts 'Your game has been saved!'
   end
 
   def show_display
@@ -48,7 +49,10 @@ class Hangman
   def take_turn
     puts 'Guess a letter (or enter SAVE to save progress):'
     letter = gets.chomp.downcase
-    if incorrect_letters.include?(letter) || display.include?(letter)
+    if letter == 'save'
+      save_game
+      take_turn
+    elsif incorrect_letters.include?(letter) || display.include?(letter)
       puts "#{letter} was already guessed."
       take_turn
     elsif secret_word.include?(letter)
@@ -63,7 +67,6 @@ class Hangman
   def play
     puts 'Welcome to Hangman!'
     puts '--------------'
-    save_game
     show_display
     until number_of_guesses.zero?
       take_turn
